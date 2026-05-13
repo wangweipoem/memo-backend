@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const notesRoutes = require('./routes/notes');
@@ -8,7 +7,7 @@ const notesRoutes = require('./routes/notes');
 const app = express();
 
 // 中间件
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cors());
 
 // 根路径 - 欢迎页面
