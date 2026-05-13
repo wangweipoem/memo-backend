@@ -3,62 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>多人备忘录</title>
+    <title>备忘录</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <!-- Auth Section -->
         <div id="auth" class="card auth-card hidden">
-            <h1 class="brand">多人备忘录</h1>
+            <div class="auth-image">
+                <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="30" y="10" width="140" height="115" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="1.5"/>
+                    <rect x="42" y="20" width="60" height="4" rx="2" fill="#c7d2fe"/>
+                    <rect x="42" y="30" width="100" height="3" rx="1.5" fill="#e0e7ff"/>
+                    <rect x="42" y="38" width="80" height="3" rx="1.5" fill="#e0e7ff"/>
+                    <rect x="42" y="46" width="90" height="3" rx="1.5" fill="#e0e7ff"/>
+                    <rect x="42" y="58" width="55" height="3" rx="1.5" fill="#ddd6fe"/>
+                    <rect x="42" y="67" width="85" height="3" rx="1.5" fill="#ddd6fe"/>
+                    <rect x="42" y="76" width="70" height="3" rx="1.5" fill="#ddd6fe"/>
+                    <line x1="50" y1="58" x2="50" y2="84" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="160" cy="18" r="12" fill="#6366f1" opacity="0.15"/>
+                    <circle cx="170" cy="28" r="6" fill="#a855f7" opacity="0.2"/>
+                    <path d="M155 85l-3 8h6l-3-8z" fill="#f59e0b"/>
+                    <circle cx="155" cy="78" r="4" fill="#fbbf24" opacity="0.6"/>
+                </svg>
+            </div>
+            <h1 class="brand">📝 备忘录</h1>
+            <p class="auth-subtitle">记录你的想法，随时随地</p>
             <div class="tabs">
                 <button class="tab active" data-tab="login">登录</button>
                 <button class="tab" data-tab="register">注册</button>
             </div>
             <form id="form-login" class="form active">
-                <input type="email" id="login-email" class="input" placeholder="邮箱" required autocomplete="email">
-                <input type="password" id="login-pass" class="input" placeholder="密码" required autocomplete="current-password">
+                <input type="email" id="login-email" class="input" placeholder="📧 邮箱地址" required autocomplete="email">
+                <input type="password" id="login-pass" class="input" placeholder="🔒 密码" required autocomplete="current-password">
                 <button type="submit" class="btn btn-full">登录</button>
             </form>
             <form id="form-register" class="form">
-                <input type="email" id="reg-email" class="input" placeholder="邮箱" required autocomplete="email">
-                <input type="password" id="reg-pass" class="input" placeholder="密码 (至少6位)" required minlength="6" autocomplete="new-password">
+                <input type="email" id="reg-email" class="input" placeholder="📧 邮箱地址" required autocomplete="email">
+                <input type="password" id="reg-pass" class="input" placeholder="🔒 密码 (至少6位)" required minlength="6" autocomplete="new-password">
                 <button type="submit" class="btn btn-full">注册</button>
             </form>
-            <p id="auth-msg" class="msg"></p>
+            <p id="auth-msg" class="msg msg-error"></p>
         </div>
 
         <!-- App Section -->
         <div id="app" class="hidden">
             <header class="header">
-                <h1 class="brand">多人备忘录</h1>
+                <h1 class="brand">📝 备忘录</h1>
                 <span id="user-email" class="user-tag"></span>
-                <button id="btn-logout" class="btn secondary">退出</button>
+                <button id="btn-logout" class="btn btn-danger">🚪 退出</button>
             </header>
 
             <div class="main-grid">
-                <!-- Create Note -->
-                <section class="card">
-                    <h2 id="editor-title">新建备忘录</h2>
+                <!-- Create / Edit Note -->
+                <section class="card" id="editor-card">
+                    <h2 id="editor-title">✏️ 新建备忘录</h2>
                     <input type="text" id="note-title" class="input mb-2" placeholder="标题">
-                    <textarea id="note-content" class="input" rows="4" placeholder="内容..."></textarea>
+                    <textarea id="note-content" class="input" rows="4" placeholder="写点什么..."></textarea>
                     <div class="flex justify-between items-center mt-2">
-                        <button id="btn-save" class="btn">保存</button>
+                        <button id="btn-save" class="btn">💾 保存</button>
                         <button id="btn-cancel-edit" class="btn secondary hidden">取消</button>
                     </div>
-                    <p id="note-msg" class="msg"></p>
+                    <p id="note-msg" class="msg msg-error"></p>
                 </section>
 
                 <!-- Notes List -->
                 <section class="card">
-                    <div class="flex justify-between items-center mb-2">
-                        <h2 class="mb-0">备忘录列表</h2>
-                        <button id="btn-refresh" class="btn secondary">刷新</button>
+                    <div class="section-header">
+                        <h2>📋 备忘录列表 <span id="note-count" class="note-count">0</span></h2>
+                        <button id="btn-refresh" class="btn secondary">🔄 刷新</button>
                     </div>
                     <ul id="notes-list" class="notes-list"></ul>
-                    <p id="list-msg" class="msg"></p>
+                    <p id="list-msg" class="msg msg-info"></p>
                 </section>
             </div>
+
+            <footer class="app-footer">
+                备忘录 · 数据安全存储 · 随时随地访问
+            </footer>
         </div>
     </div>
 

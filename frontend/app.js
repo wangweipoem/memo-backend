@@ -137,8 +137,12 @@ async function loadNotes() {
     list.innerHTML = '';
     msg.textContent = '';
 
+    const countEl = $('#note-count');
+    if (countEl) countEl.textContent = notes.length;
+
     if (notes.length === 0) {
-        msg.textContent = '暂无备忘录，新建一个吧';
+        list.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>暂无备忘录，新建一个吧</p></div>';
+        msg.textContent = '';
         return;
     }
 
