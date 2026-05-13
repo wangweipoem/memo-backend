@@ -2,25 +2,27 @@ require('dotenv').config();
 const mysql = require('mysql2');
 
 function getConfig() {
+    // 支持 Railway 的环境变量名 + 通用 DATABASE_URL
     const url = process.env.DATABASE_URL || process.env.MYSQL_URL;
     if (url) {
         const parsed = new URL(url);
         return {
             host: parsed.hostname,
-            port: parsed.port || 3306,
-            user: parsed.username,
-            password: parsed.password,
+            port: parseInt(parsed.port) || 3306,
+            user: decodeURIComponent(parsed.username),
+            password: decodeURIComponent(parsed.password),
             database: parsed.pathname.slice(1),
             waitForConnections: true,
             connectionLimit: 10,
         };
     }
+    // 本地 .env 或 Railway 独立变量
     return {
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
-        port: process.env.DB_PORT || 3306,
+        host: process.env.DB_HOST || process.env.MYSQLHOST || 'localhost',
+        user: process.env.DB_USER || process.env.MYSQLUSER || 'root',
+        password: process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || '',
+        database: process.env.DB_NAME || process.env.MYSQLDATABASE || 'memo_app',
+        port: parseInt(process.env.DB_PORT || process.env.MYSQLPORT) || 3306,
         waitForConnections: true,
         connectionLimit: 10,
         ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
