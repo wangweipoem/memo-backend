@@ -6,25 +6,45 @@ const notesRoutes = require('./routes/notes');
 
 const app = express();
 
-// 中间件
-app.use(express.json());
-app.use(cors());
+// CORS — 允许 GitHub Pages 和本地开发
+const allowedOrigins = [
+    'https://wangweipoem.github.io',
+    'http://localhost:3000',
+    'http://127.0.0.1:5500',
+    'http://localhost:5500',
+];
+app.use(cors({
+    origin: (origin, cb) => {
+        if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+        cb(null, false);
+    },
+}));
 
-// 根路径 - 欢迎页面
+app.use(express.json());
+
+// 健康检查
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok' });
+});
+
+// 根路径
 app.get('/', (req, res) => {
     res.json({
-        message: '多人备忘录 API 服务',
+        message: '多人备忘录 API',
         version: '1.0.0',
         endpoints: {
+            health: 'GET /health',
             auth: {
                 register: 'POST /auth/register',
-                login: 'POST /auth/login'
+                login: 'POST /auth/login',
             },
             notes: {
-                list: 'GET /notes (需要认证)',
-                create: 'POST /notes (需要认证)'
-            }
-        }
+                list: 'GET /notes',
+                create: 'POST /notes',
+                update: 'PUT /notes/:id',
+                delete: 'DELETE /notes/:id',
+            },
+        },
     });
 });
 
@@ -32,6 +52,8 @@ app.get('/', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/notes', notesRoutes);
 
-// 启动服务
+// 启动
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+});
