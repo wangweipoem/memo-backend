@@ -29,7 +29,16 @@ function getConfig() {
     };
 }
 
-const pool = mysql.createPool(getConfig());
+const config = getConfig();
+console.log('DB Config:', { host: config.host, port: config.port, user: config.user, database: config.database });
+let pool;
+try {
+    pool = mysql.createPool(config);
+    console.log('Database pool created');
+} catch (err) {
+    console.error('Failed to create pool:', err.message);
+    process.exit(1);
+}
 
 // 自动建表
 async function migrate() {
@@ -39,7 +48,7 @@ async function migrate() {
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB`); } catch (err) { console.error('Create users:', err.message); }
+    ) ENGINE=InnoDB`); console.log('Users table ready'); } catch (err) { console.error('Create users:', err.message); }
     try { await p.query(`CREATE TABLE IF NOT EXISTS notes (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
@@ -48,7 +57,7 @@ async function migrate() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    ) ENGINE=InnoDB`); } catch (err) { console.error('Create notes:', err.message); }
+    ) ENGINE=InnoDB`); console.log('Notes table ready'); } catch (err) { console.error('Create notes:', err.message); }
 }
 migrate();
 
