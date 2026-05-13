@@ -3,6 +3,28 @@ const db = require('../config');
 
 const router = express.Router();
 
+// 密码验证中间件 — 检查 Authorization 请求头或 password 查询参数
+const requireAdminPassword = (req, res, next) => {
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (!adminPassword) {
+        return res.status(500).json({ message: 'Admin password not configured' });
+    }
+
+    const authHeader = req.headers['authorization'];
+    const queryPassword = req.query.password;
+
+    const provided = authHeader || queryPassword;
+
+    if (!provided || provided !== adminPassword) {
+        return res.status(401).json({ message: 'Unauthorized: invalid or missing admin password' });
+    }
+
+    next();
+};
+
+// 所有 /admin/* 路由均需通过密码验证
+router.use(requireAdminPassword);
+
 // 获取所有用户（不含密码）
 router.get('/users', (req, res) => {
     db.query('SELECT id, email, created_at FROM users ORDER BY id ASC', (err, results) => {

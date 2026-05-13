@@ -81,6 +81,10 @@ app.use('/notes', notesRoutes);
 app.use('/admin', adminRoutes);
 
 // 启动
+// 环境变量说明:
+//   PORT          — 服务监听端口（默认 3000）
+//   JWT_SECRET    — 用于签发和验证用户 JWT 令牌的密钥
+//   ADMIN_PASSWORD — 保护 /admin/* 端点的管理密码（通过 Authorization 请求头或 ?password= 查询参数传入）
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
