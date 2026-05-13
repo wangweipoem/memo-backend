@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const notesRoutes = require('./routes/notes');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 
@@ -77,6 +78,7 @@ app.post('/migrate', async (req, res) => {
 // 路由
 app.use('/auth', authRoutes);
 app.use('/notes', notesRoutes);
+app.use('/admin', adminRoutes);
 
 // 启动
 const PORT = process.env.PORT || 3000;
