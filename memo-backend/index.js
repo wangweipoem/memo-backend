@@ -49,6 +49,31 @@ app.get('/', (req, res) => {
     });
 });
 
+// 数据库迁移
+app.post('/migrate', async (req, res) => {
+    const db = require('./config');
+    try {
+        await db.promise().query(`CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            email VARCHAR(255) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB`);
+        await db.promise().query(`CREATE TABLE IF NOT EXISTS notes (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            title VARCHAR(255) NOT NULL,
+            content TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB`);
+        res.json({ message: 'Tables created' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // 路由
 app.use('/auth', authRoutes);
 app.use('/notes', notesRoutes);
