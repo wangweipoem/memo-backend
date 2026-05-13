@@ -1,5 +1,5 @@
 // API 配置 — 部署时将 API_URL 改为后端实际地址
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://memo-backend-production-8f82.up.railway.app';
 const TOKEN_KEY = 'memo_token';
 
 // ============ Token 管理 ============

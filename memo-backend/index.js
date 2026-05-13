@@ -9,6 +9,7 @@ const app = express();
 // CORS — 允许 GitHub Pages 和本地开发
 const allowedOrigins = [
     'https://wangweipoem.github.io',
+    'https://memo-backend-production-8f82.up.railway.app',
     'http://localhost:3000',
     'http://127.0.0.1:5500',
     'http://localhost:5500',
