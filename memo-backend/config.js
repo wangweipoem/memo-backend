@@ -1,16 +1,33 @@
 require('dotenv').config();
 const mysql = require('mysql2');
 
-const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT || 3306,
-    waitForConnections: true,
-    connectionLimit: 10,
-    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
-});
+function getConfig() {
+    const url = process.env.DATABASE_URL || process.env.MYSQL_URL;
+    if (url) {
+        const parsed = new URL(url);
+        return {
+            host: parsed.hostname,
+            port: parsed.port || 3306,
+            user: parsed.username,
+            password: parsed.password,
+            database: parsed.pathname.slice(1),
+            waitForConnections: true,
+            connectionLimit: 10,
+        };
+    }
+    return {
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        port: process.env.DB_PORT || 3306,
+        waitForConnections: true,
+        connectionLimit: 10,
+        ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
+    };
+}
+
+const pool = mysql.createPool(getConfig());
 
 // 自动建表
 pool.query(`CREATE TABLE IF NOT EXISTS users (
